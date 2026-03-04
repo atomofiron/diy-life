@@ -1,0 +1,48 @@
+[package]
+name = "life"
+version = "0.1.0"
+authors = ["atomofiron <atomofiron@gmail.com>"]
+edition = "2021"
+license = "GPL-2"
+
+[[bin]]
+name = "life"
+test = false
+bench = false
+
+[dependencies]
+panic-halt = "1.0"
+heapless = "0.9"
+ssd1306 = "0.10"
+bytemuck = "1.25"
+
+[dependencies.arduino-hal]
+git = "https://github.com/rahix/avr-hal"
+rev = "e5c8f37fe48419956e722490a82b9ca9b9fc61a2"
+features = ["arduino-leonardo"]
+
+# Configure the build for minimal size - AVRs have very little program memory
+[profile.dev]
+panic = "abort"
+lto = false
+opt-level = "s"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+debug = false
+lto = true
+opt-level = "s"
+strip = true
+
+#https://github.com/Rahix/avr-hal/tree/main/examples
+#cargo install cargo-generate
+#cargo install ravedude
+#cargo generate --git https://github.com/Rahix/avr-hal-template.git
+
+#macos: /dev/cu.usbmodem101
+#cargo build --release
+#avr-objcopy -O ihex -R .eeprom target/avr-none/release/life.elf life.hex
+#stty -f /dev/cu.usbmodem101 1200 # ???
+#avrdude -p atmega32u4 -c avr109 -P /dev/cu.usbmodem101 -b 57600 -U flash:w:life.hex
+#avr-size -C --mcu=atmega32u4 target/avr-none/release/life.elf
