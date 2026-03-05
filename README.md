@@ -14,7 +14,7 @@ cargo install ravedude
 cargo generate --git https://github.com/Rahix/avr-hal-template.git
 ```
 https://github.com/Rahix/avr-hal/tree/main/examples \
-[avrdude.conf v7.3](https://github.com/avrdudes/avrdude/releases/tag/v7.3) (is 8.0 compatible?)
+[avrdude.conf v7.3](https://github.com/avrdudes/avrdude/releases/tag/v7.3)
 
 ### Build
 ```
@@ -68,7 +68,7 @@ avrdude -C avrdude7.3.conf -c usbasp -p m32u4 -v
 avrdude -C avrdude7.3.conf -p m32u4 -c usbasp -e
 ```
 
-### Recovery
+### Recover
 [Caterina-promicro16.hex](https://github.com/sparkfun/Arduino_Boards/blob/main/sparkfun/avr/bootloaders/caterina/Caterina-promicro16.hex) \
 connect second usb to ProMicro
 ```
