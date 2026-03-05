@@ -34,15 +34,3 @@ debug = false
 lto = true
 opt-level = "s"
 strip = true
-
-#https://github.com/Rahix/avr-hal/tree/main/examples
-#cargo install cargo-generate
-#cargo install ravedude
-#cargo generate --git https://github.com/Rahix/avr-hal-template.git
-
-#macos: /dev/cu.usbmodem101
-#cargo build --release
-#avr-objcopy -O ihex -R .eeprom target/avr-none/release/life.elf firmware.hex
-#stty -f /dev/cu.usbmodem101 1200 # ???
-#avrdude -p atmega32u4 -c avr109 -P /dev/cu.usbmodem101 -b 57600 -U flash:w:firmware.hex
-#avr-size -C --mcu=atmega32u4 target/avr-none/release/life.elf
