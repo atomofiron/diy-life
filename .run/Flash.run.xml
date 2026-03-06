@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Flash" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="cargo build --release &amp;&amp; avr-objcopy -O ihex -R .eeprom target/avr-none/release/life.elf firmware.hex &amp;&amp; if [ `stat -f%z firmware.hex` -le 82000 ]; then avrdude -p atmega32u4 -C $CONFIG -c avr109 -P /dev/$DEV_NAME -b 57600 -U flash:w:firmware.hex; fi" />
+    <option name="SCRIPT_TEXT" value="cargo build --release &amp;&amp; avr-objcopy -O ihex -R .eeprom target/avr-none/release/life.elf firmware.hex &amp;&amp; avrdude -p atmega32u4 -C $CONFIG -c avr109 -P /dev/$DEV_NAME -b 57600 -U flash:w:firmware.hex" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />

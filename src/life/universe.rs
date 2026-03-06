@@ -43,7 +43,7 @@ impl Universe {
         display.draw(bytes).unwrap();
     }
 
-    pub fn armageddon(&mut self,) {
+    pub fn armageddon(&mut self) {
         self.generation.fill(0);
     }
 
