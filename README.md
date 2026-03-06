@@ -21,7 +21,7 @@ https://github.com/Rahix/avr-hal/tree/main/examples \
 cargo build --release
 avr-objcopy -O ihex -R .eeprom target/avr-none/release/life.elf firmware.hex
 ```
-`/dev/cu.usbmodem101` – MacOS
+`/dev/cu.usbmodemX` – MacOS
 
 ### Check
 ```
@@ -30,12 +30,12 @@ avr-size -C --mcu=atmega32u4 target/avr-none/release/life.elf
 
 ### Flash
 ```
-avrdude -C avrdude7.3.conf -p atmega32u4 -c avr109 -P /dev/cu.usbmodem101 -b 57600 -U flash:w:firmware.hex
+avrdude -C avrdude7.3.conf -p atmega32u4 -c avr109 -P /dev/cu.usbmodemX -b 57600 -U flash:w:firmware.hex
 ```
 
 ### Other
 ```
-stty -f /dev/cu.usbmodem101 1200
+stty -f /dev/cu.usbmodemX 1200
 ```
 
 ## Recovering via USBASP (jumpers 3.3V, JP3)
@@ -138,3 +138,31 @@ avrdude -C avrdude7.3.conf -p m32u4 -c usbasp -e
 ```
 avrdude -C avrdude7.3.conf -p m32u4 -c usbasp -U flash:w:Caterina-Promicro16.hex:i -U lfuse:w:0xff:m -U hfuse:w:0xd8:m -U efuse:w:0xcb:m -U lock:w:0x2f:m
 ```
+<details>
+<summary>output</summary>
+
+```
+Processing -U flash:w:Caterina-Promicro16.hex:i
+Reading 4090 bytes for flash from input file Caterina-Promicro16.hex
+Writing 4090 bytes to flash
+Writing | ################################################## | 100% 33.53 s 
+Reading | ################################################## | 100% 24.13 s 
+4090 bytes of flash verified
+
+Processing -U lfuse:w:0xff:m
+Reading 1 byte for lfuse from input file 0xff
+Writing 1 byte (0xFF) to lfuse, 1 byte written, 1 verified
+
+Processing -U hfuse:w:0xd8:m
+Reading 1 byte for hfuse from input file 0xd8
+Writing 1 byte (0xD8) to hfuse, 1 byte written, 1 verified
+
+Processing -U efuse:w:0xcb:m
+Reading 1 byte for efuse from input file 0xcb
+Writing 1 byte (0xCB) to efuse, 1 byte written, 1 verified
+
+Processing -U lock:w:0x2f:m
+Reading 1 byte for lock from input file 0x2f
+Writing 1 byte (0x2F) to lock, 1 byte written, 1 verified
+```
+</details>
