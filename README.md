@@ -95,10 +95,10 @@ Writing 1 byte to output file <stdout>
 ```
 | hfuse | bootloader | flash space | bootloader start |
 |-------|------------|-------------|------------------|
-| 0xDE  | 512 байт   | 32256 байт  | 0x3F00           |
-| 0xD6  | 1024 байта | 31744 байта | 0x3E00           |
-| 0xD2  | 2048 байт  | 30720 байт  | 0x3C00           |
-| 0xD8  | 4096 байт  | 28672 байта | 0x3800           |
+| 0xDE  | 512 bytes  | 32256 bytes | 0x3F00           |
+| 0xD6  | 1024 bytes | 31744 bytes | 0x3E00           |
+| 0xD2  | 2048 bytes | 30720 bytes | 0x3C00           |
+| 0xD8  | 4096 bytes | 28672 bytes | 0x3800           |
 </details>
 
 current Lock Bits
