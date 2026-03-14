@@ -26,7 +26,6 @@ fn main() -> ! {
     uwriteln!(&mut serial, "ProMicro started\r")
         .unwrap();
 
-    let mut led = pins.d13.into_output(); // wtf?
     let mut blue = pins.led_rx.into_output_high().downgrade();
     let mut green = pins.led_tx.into_output_high().downgrade();
 
@@ -81,8 +80,10 @@ fn main() -> ! {
         loop_flag = !loop_flag;
 
         let touched = touch.is_high();
-        if touched != was_touched {
-            led.toggle();
+        match touched {
+            t if t == was_touched => (),
+            true => blue.on(),
+            false => blue.off(),
         }
         let splash = touched && touched != was_touched;
         was_touched = touched;
