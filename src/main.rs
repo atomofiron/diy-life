@@ -1,30 +1,39 @@
 #![no_std]
 #![no_main]
 
-use arduino_hal::{Adc, Pins};
+use arduino_hal::{default_serial, pins, Adc, I2c, Peripherals, Pins};
+use core::panic::PanicInfo;
 use life::ext::pin_ext::LedExt;
 use life::ext::terminal::TerminalDisplayExt;
 use life::life::universe::Universe;
 use life::values::{SCREEN_400K, SCREEN_HEIGHT, SCREEN_WIDTH};
-#[allow(unused_imports)]
-use panic_halt as _;
 use ssd1306::command::AddrMode;
 use ssd1306::{prelude::*, I2CDisplayInterface, Ssd1306};
+use ufmt::uwriteln;
+
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    loop { }
+}
 
 #[arduino_hal::entry]
 fn main() -> ! {
 
-    let dp = arduino_hal::Peripherals::take().unwrap();
-    let pins: Pins = arduino_hal::pins!(dp);
-    let mut led = pins.d13.into_output();
+    let peripherals = Peripherals::take().unwrap();
+    let pins: Pins = pins!(peripherals);
+    let mut serial = default_serial!(peripherals, pins, 57600);
 
+    uwriteln!(&mut serial, "ProMicro started\r")
+        .unwrap();
+
+    let mut led = pins.d13.into_output(); // wtf?
     let mut blue = pins.led_rx.into_output_high().downgrade();
     let mut green = pins.led_tx.into_output_high().downgrade();
 
     green.blink();
 
-    let i2c = arduino_hal::I2c::new(
-        dp.TWI,
+    let i2c = I2c::new(
+        peripherals.TWI,
         pins.d2.into_pull_up_input(),
         pins.d3.into_pull_up_input(),
         SCREEN_400K,
@@ -49,13 +58,13 @@ fn main() -> ! {
     green.blink();
     arduino_hal::delay_ms(1000);
 
-    let mut adc = Adc::new(dp.ADC, Default::default());
-    let a0 = pins.a0.into_analog_input(&mut adc);
+    let mut adc = Adc::new(peripherals.ADC, Default::default());
+    let a0 = pins.a0.into_analog_input(&mut adc); // don't use this pin
     let touch = pins.d4.into_floating_input();
 
     blue.blink();
 
-    let mut universe = Universe::new(adc, a0);
+    let mut universe = Universe::new(a0);
 
     display.set_addr_mode(AddrMode::Vertical)
         .unwrap();
@@ -85,6 +94,6 @@ fn main() -> ! {
             false => touch_counter = 0,
         }
 
-        universe.evolve(&mut display, splash);
+        universe.evolve(&mut display, &mut adc, splash);
     }
 }

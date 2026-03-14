@@ -11,7 +11,7 @@ test = false
 bench = false
 
 [dependencies]
-panic-halt = "1.0"
+ufmt = "0.2.0"
 heapless = "0.9"
 ssd1306 = "0.10"
 bytemuck = "1.25"

@@ -1,4 +1,3 @@
-use crate::life::random::Random;
 use crate::types::TerminalDisplay;
 use crate::values::{SCREEN_HEIGHT, SCREEN_WIDTH};
 use arduino_hal::hal::Adc;
@@ -14,19 +13,16 @@ const BUF_SIZE: usize = WIDTH;
 
 pub struct Universe {
     generation: [u64; 128],
-    random: Random,
+    unused: Pin<Analog, A0>,
     splash: bool,
 }
 
 impl Universe {
 
-    pub fn new(
-        adc: Adc<DefaultClock>,
-        pin: Pin<Analog, A0>,
-    ) -> Universe {
+    pub fn new(unused: Pin<Analog, A0>) -> Universe {
         Universe {
             generation: [0; BUF_SIZE],
-            random: Random::new(adc, pin),
+            unused,
             splash: false,
         }
     }
@@ -34,10 +30,11 @@ impl Universe {
     pub fn evolve(
         &mut self,
         display: &mut TerminalDisplay,
+        adc: &mut Adc<DefaultClock>,
         splash: bool,
     ) {
         self.splash = true;
-        self.sow();
+        self.sow(adc);
         self.evolution(splash);
         let bytes: &[u8] = bytemuck::cast_slice(&self.generation);
         display.draw(bytes).unwrap();
@@ -48,9 +45,9 @@ impl Universe {
     }
 
     #[inline]
-    fn sow(&mut self) {
-        let a = self.random.next();
-        let b = self.random.next();
+    fn sow(&mut self, adc: &mut Adc<DefaultClock>) {
+        let a = self.random(adc);
+        let b = self.random(adc);
         let x = (a & 0b1111111) as usize; // 0-127
         let y = (b & 0b111111) as u32; // 0-63
         self.generation[x] |= ((a & 0b1111) as u64).rotate_left(y);
@@ -87,6 +84,16 @@ impl Universe {
             self.generation[cursor] = calculate_column(center, neighbors, splash);
         }
         self.splash = false;
+    }
+
+    fn random(&mut self, adc: &mut Adc<DefaultClock>) -> u8 {
+        let mut rnd: u8 = 0;
+        for _ in 0..8 {
+            let v = adc.read_blocking(&self.unused);
+            rnd = (rnd << 1) | ((v & 1) as u8);
+            core::hint::spin_loop();
+        }
+        return rnd
     }
 }
 
